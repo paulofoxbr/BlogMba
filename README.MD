@@ -1,3 +1,4 @@
+
 # <center>BlogMba</center>
 ## é Projeto de um BLOG simples para MBA DEVEXPERTS
 
@@ -25,6 +26,7 @@ O meu problema hoje, é como compartilhar o acesso a dados, principalmente do Ide
 Neste caso o BlogMba.data seria um projeto de class library não dependendo de nenhum outro. Mas os outros dois projetos dependem do BlogMba.Data.
 
 Hoje estou subindo uma versão do projeto, para uma avaliaçao inicial. Ainda com pouco código.
+
 
 
 
