@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Blog.Data.Data
 {
-    public class AppDbContext : IdentityDbContext
+    public class AppDbContext : IdentityDbContext<ApplicationUser>
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
@@ -27,7 +28,10 @@ namespace Blog.Data.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
+            modelBuilder.Entity<Models.Author>();
+            modelBuilder.Entity<Models.Post>();
+            modelBuilder.Entity<Models.Comment>();
+            //modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -35,5 +39,10 @@ namespace Blog.Data.Data
             var connectonString = "Data Source=localhost,1533;Database=blog;Persist Security Info=True;User ID=sa;Password=Gwnet2007;TrustServerCertificate=True; MultipleActiveResultSets=True";
             optionsBuilder.UseSqlServer(connectonString);
         }
+    }
+
+    public class ApplicationUser: IdentityUser
+    {
+
     }
 }
