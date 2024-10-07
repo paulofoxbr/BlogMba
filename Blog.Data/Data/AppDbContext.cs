@@ -34,11 +34,11 @@ namespace Blog.Data.Data
             //modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            var connectonString = "Data Source=localhost,1533;Database=blog;Persist Security Info=True;User ID=sa;Password=Gwnet2007;TrustServerCertificate=True; MultipleActiveResultSets=True";
-            optionsBuilder.UseSqlServer(connectonString);
-        }
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    var connectonString = "Data Source=localhost,1533;Database=blog;Persist Security Info=True;User ID=sa;Password=Gwnet2007;TrustServerCertificate=True; MultipleActiveResultSets=True";
+        //    optionsBuilder.UseSqlServer(connectonString);
+        //}
     }
 
     public class ApplicationUser: IdentityUser
