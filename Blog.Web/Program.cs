@@ -1,4 +1,5 @@
 using Blog.Data.Data;
+using Blog.Data.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,6 +15,7 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
     .AddEntityFrameworkStores<AppDbContext>();
 
 builder.Services.AddControllersWithViews();
+builder.Services.AddScoped<PostService>();
 
 var app = builder.Build();
 
@@ -35,6 +37,8 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+
+app.MapControllers();
 
 app.MapControllerRoute(
     name: "default",

@@ -1,16 +1,24 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Blog.Data.Models;
+using Blog.Data.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Blog.Web.Controllers
 {
-    [Route("meus-posts")]
+   // [Route("posts")]
     public class PostsController : Controller
     {
-        // GET: Posts
+        private readonly PostService _postService;
 
-        public ActionResult Index()
+        // GET: Posts
+        public PostsController(PostService postService)
         {
-            return View();
+            _postService = postService;
+        }
+
+        public async Task<ActionResult> Index()
+        {
+            return View( await _postService.GetPostsAsync());
         }
 
         //// GET: Posts/detalhes/5
@@ -21,58 +29,65 @@ namespace Blog.Web.Controllers
         }
 
         //// GET: Posts/Create
-        [HttpGet("novo")]
+        [HttpGet]
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: PostController1/Create
-        [HttpPost("novo")]
+        // POST: Post/Create
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<ActionResult> Create([Bind("Id,Title,Content,Created,Updated,AuthorId")] Post post )
         {
+            if (!ModelState.IsValid)  { return View(post); }
             try
             {
+
+                await _postService.CreatePostAsync(post);
+
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                return View();
+                return View(post);
             }
         }
 
         // GET: PostController1/Edit/5
-        [HttpGet("editar/{id:int}")]
+        [HttpGet("Edit/{id:int}")]
         public ActionResult Edit(int id)
         {
             return View();
         }
 
         // POST: PostController1/Edit/5
-        [HttpPost("editar/{id:int}")]
+        [HttpPost("Edit/{id:int}")]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, [Bind("Id,Title,Content,Created,Updated,AuthorId")] Post post)
         {
+            if (id != post.Id) { return NotFound(); }
+            if (!ModelState.IsValid) { return View(post); }
+
             try
             {
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                return View();
+                return View(post);
             }
         }
 
         // GET: PostController1/Delete/5
-        [HttpGet("excluir/{id:int}")]
+        [HttpGet("Delete/{id:int}")]
         public ActionResult Delete(int id)
         {
             return View();
         }
 
         // POST: PostController1/Delete/5
-        [HttpPost("excluir/{id:int}")]
+        [HttpPost("Delete/{id:int}")]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)
         {

@@ -9,8 +9,10 @@ namespace Blog.Data.Models
 {
     public class Post
     {
-        [Key]
         public int Id { get; set; }
+        [Required(ErrorMessage = "O campo Título é obrigatório.")]
+        [MinLength(5,ErrorMessage ="O tamanho mínimo do Título é de 5 caracteres")]
+        [MaxLength(100,ErrorMessage ="O tamanho máximo do Título é de 100 caracteres")]
         public string Title { get; set; } = string.Empty;
         public string Content { get; set; } = string.Empty;
         public DateTime Created { get; set; } = DateTime.Now;
