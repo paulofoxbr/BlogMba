@@ -14,13 +14,14 @@
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
 
-            <div class="form-group" style="margin-bottom:30px">
+            <div class="form-group" style="margin-bottom:20px">
                 <label asp-for="Content">Conteúdo do Post</label>
                 <textarea asp-for="Content" class="form-control" rows="20" cols="150"></textarea>
                 <span asp-validation-for="Content" class="text-danger"></span>
             </div>
 
             <input type="submit" name="Enviar" value="Enviar" class="btn btn-info" />
+            <a asp-action="Index" class="btn btn-warning">Voltar</a>
         </form>
     </div>
 </div>

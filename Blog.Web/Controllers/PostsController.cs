@@ -1,11 +1,13 @@
 ﻿using Blog.Data.Models;
 using Blog.Data.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Blog.Web.Controllers
 {
-   // [Route("posts")]
+    // [Route("posts")]
+    [Authorize]
     public class PostsController : Controller
     {
         private readonly PostService _postService;
@@ -16,16 +18,18 @@ namespace Blog.Web.Controllers
             _postService = postService;
         }
 
+        [AllowAnonymous]
         public async Task<ActionResult> Index()
         {
             return View( await _postService.GetPostsAsync());
         }
 
         //// GET: Posts/detalhes/5
-        [HttpGet("detalhes/{id:int}")]
-        public ActionResult Details(int id)
+        [AllowAnonymous]
+        [HttpGet("Details/{id:int}")]
+        public async Task<ActionResult> Details(int id)
         {
-            return View();
+            return View( await _postService.GetPostByIdAsync(id));
         }
 
         //// GET: Posts/Create
