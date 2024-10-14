@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Blog.Web.Controllers
 {
     // [Route("posts")]
-    [Authorize]
+    [Authorize(Roles = "ADMIN")]
     public class PostsController : Controller
     {
         private readonly PostService _postService;
