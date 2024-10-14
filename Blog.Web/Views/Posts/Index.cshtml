@@ -1,13 +1,20 @@
 ﻿@model IEnumerable<Post>
 
-<h4>Posts do Blog</h4>
+<h4 style="text-align:center">Posts do Blog 14/10</h4>
+
+<h1>@ViewData["Title"]</h1>
+
+<p>
+    <a class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Cria um novo POST." asp-action="Create"><spam class="fa fa-plus"</spam>  Novo</a>
+</p>
+
 
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
+            <th>@Html.DisplayNameFor(model => model.Title)</th>
+            <th>@Html.DisplayNameFor(model => model.Created)</th>
+            <th>@Html.DisplayNameFor(model => model.AuthorId)</th>
         </tr>
     </thead>
     <tbody>
@@ -15,8 +22,14 @@
             foreach (var item in Model)
             {
                 <tr>
+                    <td>@Html.DisplayFor(modelItem => item.Title)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Created)</td>
+                    <td>@Html.DisplayFor(modelItem => item.AuthorId)</td>
+
                     <td>
-                        @Html.DisplayFor(modelItem => item.Title)
+                        <a asp-action="Details" asp-route-id="@item.Id"><spam class="fa fa-search"></spam>  | </a>
+                        <a asp-action="Edit"  asp-route-id="@item.Id"><spam class="fa fa-pencil-alt"></spam>  | </a>
+                        <a asp-action="Delete" asp-route-id="@item.Id"><spam class="fa fa-trash"></spam> </a>
                     </td>
                 </tr>
             }
