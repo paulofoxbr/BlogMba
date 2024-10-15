@@ -1,21 +1,30 @@
-﻿using Blog.Data.Models;
+﻿using Blog.Data.Data;
+using Blog.Data.Models;
 using Blog.Data.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Blog.Web.Controllers
 {
     // [Route("posts")]
-    [Authorize(Roles = "ADMIN")]
+    //[Authorize(Roles = "ADMIN")]
+    [Authorize]
     public class PostsController : Controller
     {
         private readonly PostService _postService;
-
+        private readonly AuthorService _authorService;
+        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<IdentityUser> _userManager;
         // GET: Posts
-        public PostsController(PostService postService)
+        public PostsController(PostService postService,AuthorService authorService ,SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager)
         {
             _postService = postService;
+            _signInManager = signInManager;
+            _userManager = userManager;
+            _authorService = authorService;
+
         }
 
         [AllowAnonymous]
@@ -36,6 +45,9 @@ namespace Blog.Web.Controllers
         [HttpGet]
         public ActionResult Create()
         {
+            var UserId = _userManager.GetUserId(User);
+            var UserName = _userManager.GetUserName(User);
+
             return View();
         }
 
@@ -47,9 +59,10 @@ namespace Blog.Web.Controllers
             if (!ModelState.IsValid)  { return View(post); }
             try
             {
-
+                var authorId = await _authorService.GetAuthorByUserId( _userManager.GetUserId(User));
+                if (authorId == null) { return NotFound(); }
+                post.AuthorId = authorId.Id;
                 await _postService.CreatePostAsync(post);
-
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -68,13 +81,15 @@ namespace Blog.Web.Controllers
         // POST: PostController1/Edit/5
         [HttpPost("Edit/{id:int}")]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, [Bind("Id,Title,Content,Created,Updated,AuthorId")] Post post)
+        public async Task<ActionResult> Edit(int id, [Bind("Id,Title,Content,Created,Updated,AuthorId")] Post post)
         {
             if (id != post.Id) { return NotFound(); }
             if (!ModelState.IsValid) { return View(post); }
 
             try
             {
+                await _postService.UpdatePostAsync(post);
+
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -93,10 +108,12 @@ namespace Blog.Web.Controllers
         // POST: PostController1/Delete/5
         [HttpPost("Delete/{id:int}")]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<ActionResult> Delete(int id, IFormCollection collection)
         {
             try
             {
+                await _postService.DeletePostAsync(id);
+
                 return RedirectToAction(nameof(Index));
             }
             catch
