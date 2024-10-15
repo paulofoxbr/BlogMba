@@ -20,6 +20,7 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options =>
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<PostService>();
+builder.Services.AddScoped<AuthorService>();
 
 var app = builder.Build();
 

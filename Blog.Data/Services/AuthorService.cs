@@ -51,14 +51,20 @@ namespace Blog.Data.Services
             return await Task.FromResult(_context.Authors.Any(a => a.Id == id));
         }
 
-        public async Task<Author> GetAuthorByUserId(string userId)
+        public async Task<Author?> GetAuthorByUserId(string userId)
         {
             if (userId == null)  {throw new ArgumentNullException(nameof(userId));}
 
             var author = _context.Authors.FirstOrDefault(a => a.UserId == userId);
-            if (author == null) { throw new ArgumentNullException(nameof(author)); }
 
             return await Task.FromResult(author);
+        }
+
+        public async Task<Author> GetAuthorByUserEmail(string email)
+        {
+            var author = _context.Authors.FirstOrDefault(a => a.Email == email);
+
+            return author;
         }
     }
 }

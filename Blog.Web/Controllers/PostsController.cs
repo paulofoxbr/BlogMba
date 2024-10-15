@@ -45,9 +45,6 @@ namespace Blog.Web.Controllers
         [HttpGet]
         public ActionResult Create()
         {
-            var UserId = _userManager.GetUserId(User);
-            var UserName = _userManager.GetUserName(User);
-
             return View();
         }
 
@@ -60,7 +57,11 @@ namespace Blog.Web.Controllers
             try
             {
                 var authorId = await _authorService.GetAuthorByUserId( _userManager.GetUserId(User));
-                if (authorId == null) { return NotFound(); }
+                if (authorId == null) 
+                {
+                    ModelState.AddModelError("Email", "Usuário não encontrado como um autor.");
+                    return View(post);
+                }
                 post.AuthorId = authorId.Id;
                 await _postService.CreatePostAsync(post);
                 return RedirectToAction(nameof(Index));

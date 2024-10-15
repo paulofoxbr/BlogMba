@@ -9,6 +9,8 @@ using Blog.Data.Data;
 using Blog.Data.Models;
 using Microsoft.AspNetCore.Authorization;
 using Blog.Data.Services;
+using Microsoft.AspNetCore.Identity;
+
 
 namespace Blog.Web.Controllers
 {
@@ -16,10 +18,14 @@ namespace Blog.Web.Controllers
     public class AuthorsController : Controller
     {
         private readonly AuthorService _authorService;
+        private readonly SignInManager<IdentityUser>  _signInManager;
+        private readonly UserManager<IdentityUser>   _userManager;
 
-        public AuthorsController(AuthorService authorService)
+        public AuthorsController(AuthorService authorService,SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager)
         {
             _authorService = authorService;
+            _signInManager = signInManager;
+            _userManager = userManager;
         }
 
         // GET: Authors
@@ -60,7 +66,20 @@ namespace Blog.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                author.UserId = User.Identity.Name;
+                var userByEmail = await _userManager.FindByEmailAsync(author.Email);
+                if (userByEmail == null)
+                {
+                   ModelState.AddModelError("Email", "e-mail Usuário não encontrado. Um autor deve ser um usuário cadastrado.");
+                    return View(author);
+                }
+                var authorByEmail = await _authorService.GetAuthorByUserEmail(author.Email);
+                if (authorByEmail != null)
+                {
+                    ModelState.AddModelError("Email", $"O e-mail Usuário já está associado ao autor #{authorByEmail.Id}-{ authorByEmail.Name}.");
+                    return View(author);
+                }
+
+                author.UserId = userByEmail.Id;
                 await _authorService.CreateAuthorAsync(author);
                 return RedirectToAction(nameof(Index));
             }
