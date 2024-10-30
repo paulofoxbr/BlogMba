@@ -1,4 +1,5 @@
 ﻿using Blog.Data.Data;
+using Blog.Data.Dto;
 using Blog.Data.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -29,9 +30,56 @@ namespace Blog.Data.Services
             return await _context.Posts.ToListAsync();
         }
 
+        public async Task<int> GetRowsPostAuthorAsync()
+        {
+            return await _context.Posts.CountAsync();
+        }
+        public async Task<List<PostAuthorDto>> GetPostAuthorAsync()
+        {
+            return await _context.Posts
+                .Include(navigationPropertyPath: p => p.Author)
+                .Select(p => new PostAuthorDto
+                {
+                    Id = p.Id,
+                    Title = p.Title,
+                    Content = p.Content,
+                    Created = p.Created,
+                    Updated = p.Updated,
+                    AuthorName = p.Author.Name,
+                    AuthorEmail = p.Author.Email,
+                    AuthorBio = p.Author.Bio
+                })
+                .ToListAsync();
+        }
+        public async Task<ResponsePostAutor> GetPostAuthorAsync(int pageNumber=1,int PageSize=20)
+        {
+            var rowCounts = await _context.Posts.CountAsync();
+            var posts = await _context.Posts
+                .Include(navigationPropertyPath: p => p.Author)
+                .OrderByDescending(p => p.Created)
+                .Skip((pageNumber - 1) * PageSize)
+                .Take(PageSize)
+                .Select(p => new PostAuthorDto
+                {
+                    Id = p.Id,
+                    Title = p.Title,
+                    Content = p.Content,
+                    Created = p.Created,
+                    Updated = p.Updated,
+                    AuthorName = p.Author.Name,
+                    AuthorEmail = p.Author.Email,
+                    AuthorBio = p.Author.Bio
+                })
+                .OrderByDescending(p => p.Created)
+                .ToListAsync();
+
+            var response = new ResponsePostAutor(posts,rowCounts,PageSize,pageNumber );
+            return response;
+        }
+
         public async Task<Post> GetPostByIdAsync(int id)
         {
-            return await _context.Posts.FindAsync(id);
+           return await _context.Posts.FindAsync(id);
         }
 
         public async Task UpdatePostAsync(Post post)
@@ -49,6 +97,24 @@ namespace Blog.Data.Services
 
             _context.Posts.Remove(post);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<List<PostAuthorDto>> GetPostsWithAuthorsAsync()
+        {
+            return await _context.Posts
+                .Include(navigationPropertyPath: p => p.Author)
+                .Select(p => new PostAuthorDto
+                {
+                    Id = p.Id,
+                    Title = p.Title,
+                    Content = p.Content,
+                    Created = p.Created,
+                    Updated = p.Updated,
+                    AuthorName = p.Author.Name,
+                    AuthorEmail = p.Author.Email,
+                    AuthorBio = p.Author.Bio
+                })
+                .ToListAsync();
         }
     }
 }

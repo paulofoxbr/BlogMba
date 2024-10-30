@@ -37,6 +37,7 @@ namespace Blog.Data.Mapping
                 .HasMaxLength(450)
                 //.HasAnnotation("ErrorMessage", "O campo UserId é obrigatório.")
                 .HasDefaultValue(string.Empty);
+ 
         }
     }
 }

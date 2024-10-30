@@ -18,6 +18,7 @@ namespace Blog.Data.Models
         public DateTime Created { get; set; } = DateTime.Now;
         public DateTime? Updated { get; set; }
         public int AuthorId { get; set; }
+        public Author Author { get; set; }  
 
     }
 }

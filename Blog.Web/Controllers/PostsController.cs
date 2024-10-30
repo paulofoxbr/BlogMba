@@ -28,9 +28,11 @@ namespace Blog.Web.Controllers
         }
 
         [AllowAnonymous]
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(int pagina=1)
         {
-            return View( await _postService.GetPostsAsync());
+            var result = await _postService.GetPostAuthorAsync(pagina,1 );
+            return View(result);
+            //return View( await _postService.GetPostsAsync());
         }
 
         //// GET: Posts/detalhes/5

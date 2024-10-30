@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Blog.Data.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -31,7 +32,8 @@ namespace Blog.Data.Data
             modelBuilder.Entity<Models.Author>();
             modelBuilder.Entity<Models.Post>();
             modelBuilder.Entity<Models.Comment>();
-            //modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
+            modelBuilder.Entity<Author>().HasMany(a => a.Posts).WithOne(p => p.Author).HasForeignKey(p => p.AuthorId);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
         }
 
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -41,8 +43,5 @@ namespace Blog.Data.Data
         //}
     }
 
-    public class ApplicationUser: IdentityUser
-    {
 
-    }
 }

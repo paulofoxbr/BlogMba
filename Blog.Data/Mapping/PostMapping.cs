@@ -31,6 +31,8 @@ namespace Blog.Data.Mapping
                 .IsRequired(true)
                 .HasAnnotation("ErrorMessage", "O campo AuthorId é obrigatório.")
                 .HasColumnType("INT");
+
+
         }
     }
 }
