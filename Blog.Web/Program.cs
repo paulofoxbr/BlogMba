@@ -19,6 +19,7 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options =>
     .AddEntityFrameworkStores<AppDbContext>();
 
 builder.Services.AddControllersWithViews();
+builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<PostService>();
 builder.Services.AddScoped<AuthorService>();
 
@@ -28,6 +29,7 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();
+    
 }
 else
 {

@@ -68,7 +68,8 @@ namespace Blog.Data.Services
                     Updated = p.Updated,
                     AuthorName = p.Author.Name,
                     AuthorEmail = p.Author.Email,
-                    AuthorBio = p.Author.Bio
+                    AuthorBio = p.Author.Bio,
+                    UserId = p.Author.UserId
                 })
                 .OrderByDescending(p => p.Created)
                 .ToListAsync();
@@ -96,7 +97,8 @@ namespace Blog.Data.Services
                     Updated = p.Updated,
                     AuthorName = p.Author.Name,
                     AuthorEmail = p.Author.Email,
-                    AuthorBio = p.Author.Bio
+                    AuthorBio = p.Author.Bio,
+                    UserId = p.Author.UserId
                 })
                 .FirstOrDefaultAsync();
 
@@ -109,6 +111,20 @@ namespace Blog.Data.Services
 
             _context.Update(post);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdatePostAsync(PostAuthorDto postAuthor)
+        {
+            if (postAuthor == null) { throw new ArgumentNullException(nameof(postAuthor)); }
+
+            var postToUpdate = await _context.Posts.FindAsync(postAuthor.Id);
+            if (postToUpdate == null) { throw new ArgumentNullException(nameof(postToUpdate)); }
+
+            postToUpdate.Title = postAuthor.Title;
+            postToUpdate.Content = postAuthor.Content;
+            postToUpdate.Updated = DateTime.Now;
+
+            await UpdatePostAsync(postToUpdate);
         }
 
         public async Task DeletePostAsync(int id)
@@ -133,7 +149,9 @@ namespace Blog.Data.Services
                     Updated = p.Updated,
                     AuthorName = p.Author.Name,
                     AuthorEmail = p.Author.Email,
-                    AuthorBio = p.Author.Bio
+                    AuthorBio = p.Author.Bio,
+                    UserId = p.Author.UserId
+
                 })
                 .ToListAsync();
         }

@@ -37,6 +37,10 @@
             selector: '#editor',
             height: 500,
             menubar: true,
+            toolbar: true,
+            readonly: false,
+            browser_spellcheck: true, // Habilita o spellcheck nativo do navegador
+            contextmenu: 'spelling',
             plugins: [
                 'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
                 'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
@@ -46,7 +50,15 @@
                 'bold italic backcolor | alignleft aligncenter ' +
                 'alignright alignjustify | bullist numlist outdent indent | ' +
                 'removeformat | help',
-            content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
+            content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
+            // Configurações de idioma
+            language: 'pt_BR', // Define o idioma como português do Brasil
+            // Configurações adicionais para o spellchecker
+            gecko_spellcheck: true, // Para Firefox
+            spellchecker_language: 'pt_BR', // Idioma para verificação ortográfica
+            spellchecker_dialog: true, // Habilita diálogo de correção
+            // Configuração para adicionar palavras ao dicionário
+            custom_words: ['palavra1', 'palavra2'] // Palavras personalizadas para ignorar
         });
     </script>
 }

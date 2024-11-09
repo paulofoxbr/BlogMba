@@ -18,6 +18,8 @@ namespace Blog.Data.Dto
         public string AuthorEmail { get; set; } = string.Empty;
         [DisplayName("Biografia do Autor")]
         public string AuthorBio { get; set; } = string.Empty;
+        [DisplayName("Id do usuário")]
+        public string UserId { get; set; } = string.Empty;
 
     }
 

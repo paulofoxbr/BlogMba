@@ -1,10 +1,12 @@
 ﻿using Blog.Data.Data;
+using Blog.Data.Dto;
 using Blog.Data.Models;
 using Blog.Data.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Blog.Web.Controllers
 {
@@ -39,7 +41,6 @@ namespace Blog.Web.Controllers
         [HttpGet("Details/{id:int}")]
         public async Task<ActionResult> Details(int id)
         {
-            // return View( await _postService.GetPostByIdAsync(id));
             return View(await _postService.GetPostAuthorByIdAsync(id));
         }
 
@@ -83,15 +84,28 @@ namespace Blog.Web.Controllers
 
         // GET: PostController1/Edit/5
         [HttpGet("Edit/{id:int}")]
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Edit(int id)
         {
-            return View();
+            if (User.Identity.IsAuthenticated == false) { return RedirectToAction("Login", "Account"); }
+            var userid = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var isAdmin= User.IsInRole("ADMIN");
+            var isAdmin2= await _userManager.IsInRoleAsync(await _userManager.FindByIdAsync(userid), "ADMIN");
+
+            var postAuthor = await _postService.GetPostAuthorByIdAsync(id);
+            if (isAdmin || userid==postAuthor.UserId) 
+                return View(postAuthor);
+            else
+            {
+                return RedirectToAction(nameof(Index));
+              //  return RedirectToAction("AccessDenied", "Account");
+            }
+            
         }
 
         // POST: PostController1/Edit/5
         [HttpPost("Edit/{id:int}")]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(int id, [Bind("Id,Title,Content,Created,Updated,AuthorId")] Post post)
+        public async Task<ActionResult> Edit(int id, [Bind("Id,Title,Content,Created,Updated,AuthorId")] PostAuthorDto post)
         {
             if (id != post.Id) { return NotFound(); }
             if (!ModelState.IsValid) { return View(post); }
