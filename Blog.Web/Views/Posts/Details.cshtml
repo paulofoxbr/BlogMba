@@ -1,21 +1,59 @@
-﻿@model Post
+﻿@model PostAuthorDto
 
 @{
     ViewData["Title"] = Model.Title;
 }
 
-<h1>@ViewData["Title"]</h1>
+<h1 style="text-align:center">@ViewData["Title"]</h1>
 
-    <div class="row" style="margin-bottom:20px">
-        <div class="col-md-10">
-            <form asp-action="Create">
-
-                <div class="form-group" style="margin-bottom:20px">
-                    <textarea asp-for="Content" class="form-control" disabled rows="20" cols="150"></textarea>
+<div class="row" style="margin-bottom:20px">
+    <div class="col-md-12">
+        <!-- Primeiro, incluímos o TinyMCE via CDN -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.8.3/tinymce.min.js"></script>
+        <form asp-action="Create">
+            <div style="display: flex; gap: 10px">
+                <div>
+                    <label asp-for="Created">Data da Publicação</label>
+                    <input asp-for="Created" class="form-control" disabled style="text-align:center; background-color:aquamarine;"/>
                 </div>
+                <div>
+                    <label asp-for="Updated">Data da ultima atualização</label>
+                    <input asp-for="Updated" class="form-control" disabled style="text-align:center; background-color:aquamarine;"/>
+                </div>
+                <div>
+                    <label asp-for="AuthorName">Autor</label>
+                    <input asp-for="AuthorName" class="form-control" disabled style="text-align:center; background-color:aquamarine;"/>
+                </div>
+            </div>
 
-                <a asp-action="Index" class="btn btn-warning">Voltar</a>
-            </form>
-        </div>
+            <div class="form-group" style="margin-bottom:20px">
+                <label asp-for="Content">Conteúdo do Post</label>
+                <textarea asp-for="Content" id="editor" class="form-control" disabled></textarea>
+            </div>
+            <a asp-action="Index" class="btn btn-warning">Voltar</a>
+        </form>
     </div>
+</div>
 
+
+@section Scripts {
+    <script>
+        tinymce.init({
+            selector: '#editor',
+            height: 500,
+            menubar: false,
+            toolbar: false,
+            readonly: true,           
+            plugins: [
+                'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+                'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+                'insertdatetime', 'media', 'table', 'help', 'wordcount'
+            ],
+            toolbar: 'undo redo | formatselect | ' +
+                'bold italic backcolor | alignleft aligncenter ' +
+                'alignright alignjustify | bullist numlist outdent indent | ' +
+                'removeformat | help',
+            content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
+        });
+    </script>
+}

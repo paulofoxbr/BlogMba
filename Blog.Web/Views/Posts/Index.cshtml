@@ -38,18 +38,18 @@
         }
     </tbody>
 </table>
-            <footer class="container mt-4">
-                <div class="d-flex justify-content-center">
-                @if (Model.TotalPages >= 1)
-                {
-                <div class="paginacao">
-                    <h5 style="text-align:center">Páginas:</h5>
-                    @for (var i = 1; i <= Model.TotalPages; i++)
-                    {
-                      <a asp-action="Index" asp-route-pagina="@i">@i</a>
-                    }
-                </div>
-                }
-            </div>
 
-            </footer>
+<footer class="container mt-4">
+    <div class="d-flex justify-content-center">
+        @if (Model.TotalPages >= 1)
+        {
+        <div class="paginacao">
+            Páginas : 
+            @for (var i = 1; i <= Model.TotalPages; i++)
+            {
+              <a asp-action="Index" asp-route-pagina="@i">@i</a>
+            }
+        </div>
+        }
+    </div>
+</footer>

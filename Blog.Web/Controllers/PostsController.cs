@@ -30,9 +30,8 @@ namespace Blog.Web.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> Index(int pagina=1)
         {
-            var result = await _postService.GetPostAuthorAsync(pagina,1 );
+            var result = await _postService.GetPostAuthorAsync(pagina,10 );
             return View(result);
-            //return View( await _postService.GetPostsAsync());
         }
 
         //// GET: Posts/detalhes/5
@@ -40,7 +39,8 @@ namespace Blog.Web.Controllers
         [HttpGet("Details/{id:int}")]
         public async Task<ActionResult> Details(int id)
         {
-            return View( await _postService.GetPostByIdAsync(id));
+            // return View( await _postService.GetPostByIdAsync(id));
+            return View(await _postService.GetPostAuthorByIdAsync(id));
         }
 
         //// GET: Posts/Create
@@ -53,18 +53,25 @@ namespace Blog.Web.Controllers
         // POST: Post/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind("Id,Title,Content,Created,Updated,AuthorId")] Post post )
+        public async Task<ActionResult> Create([Bind("Title,Content")] Post post )
         {
-            if (!ModelState.IsValid)  { return View(post); }
+            ModelState.Remove("AuthorId");
+            ModelState.Remove("Author");
+            if (!ModelState.IsValid)  
+            { 
+                return View(post); 
+            }
             try
             {
-                var authorId = await _authorService.GetAuthorByUserId( _userManager.GetUserId(User));
-                if (authorId == null) 
+                //post.Content = SanitizeHtml(post.Content);
+                var author = await _authorService.GetAuthorByUserId( _userManager.GetUserId(User));
+                post.AuthorId = author.Id;
+                post.Author = author;
+                if (author == null) 
                 {
                     ModelState.AddModelError("Email", "Usuário não encontrado como um autor.");
                     return View(post);
                 }
-                post.AuthorId = authorId.Id;
                 await _postService.CreatePostAsync(post);
                 return RedirectToAction(nameof(Index));
             }

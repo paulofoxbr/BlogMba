@@ -24,7 +24,7 @@ namespace Blog.Data.Models
         public string Bio { get; set; } = string.Empty;
 
         public string UserId { get; set; } = string.Empty;
-        public ICollection<Post> Posts { get; set; } //= new List<Post>();
+        public ICollection<Post> Posts { get; set; } 
 
     }
 }

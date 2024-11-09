@@ -82,6 +82,27 @@ namespace Blog.Data.Services
            return await _context.Posts.FindAsync(id);
         }
 
+        public async Task<PostAuthorDto> GetPostAuthorByIdAsync(int id)
+        {
+            var postAuthor = await _context.Posts
+                .Include(navigationPropertyPath: p => p.Author)
+                .Where(p => p.Id == id)
+                .Select(p => new PostAuthorDto
+                {
+                    Id = p.Id,
+                    Title = p.Title,
+                    Content = p.Content,
+                    Created = p.Created,
+                    Updated = p.Updated,
+                    AuthorName = p.Author.Name,
+                    AuthorEmail = p.Author.Email,
+                    AuthorBio = p.Author.Bio
+                })
+                .FirstOrDefaultAsync();
+
+            return postAuthor;
+        }
+
         public async Task UpdatePostAsync(Post post)
         {
             if (post == null) { throw new ArgumentNullException(nameof(post)); }
