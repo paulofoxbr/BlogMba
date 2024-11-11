@@ -2,9 +2,9 @@
 
 namespace Blog.Data.InitializeData
 {
-    public class InitializeUser
+    public class InitializeUser(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
     {
-        public static async Task Initialize(IServiceProvider serviceProvider, UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
+        public async Task Initialize(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             // Certifique-se de que o papel "Admin" exista
             if (!await roleManager.RoleExistsAsync("Admin"))
@@ -21,7 +21,7 @@ namespace Blog.Data.InitializeData
                 {
                     UserName = "admin@example.com",
                     Email = "admin@example.com",
-                    EmailConfirmed = true
+                    EmailConfirmed = true,
                 };
                 await userManager.CreateAsync(adminUser, "Admin@123");
 
