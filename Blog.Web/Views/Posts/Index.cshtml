@@ -1,6 +1,6 @@
-﻿@model IEnumerable<Post>
+﻿@model ResponsePostAutor
 
-<h4 style="text-align:center">Posts do Blog 14/10</h4>
+<h4 style="text-align:center">Blog do Paulo Carneiro</h4>
 
 <h1>@ViewData["Title"]</h1>
 
@@ -12,19 +12,21 @@
 <table class="table">
     <thead>
         <tr>
-            <th>@Html.DisplayNameFor(model => model.Title)</th>
-            <th>@Html.DisplayNameFor(model => model.Created)</th>
-            <th>@Html.DisplayNameFor(model => model.AuthorId)</th>
+            <th>@Html.DisplayNameFor(model => model.PostAutor.First().Id)</th>
+            <th>@Html.DisplayNameFor(model => model.PostAutor.First().Title)</th>
+            <th>@Html.DisplayNameFor(model => model.PostAutor.First().Created)</th>
+            <th>@Html.DisplayNameFor(model => model.PostAutor.First().AuthorName)</th>
         </tr>
     </thead>
     <tbody>
         @{
-            foreach (var item in Model)
+            foreach (var item in Model.PostAutor)
             {
                 <tr>
+                    <td>@Html.DisplayFor(modelItem => item.Id)</td>
                     <td>@Html.DisplayFor(modelItem => item.Title)</td>
                     <td>@Html.DisplayFor(modelItem => item.Created)</td>
-                    <td>@Html.DisplayFor(modelItem => item.AuthorId)</td>
+                    <td>@Html.DisplayFor(modelItem => item.AuthorName)</td>
 
                     <td>
                         <a asp-action="Details" asp-route-id="@item.Id"><spam class="fa fa-search"></spam>  | </a>
@@ -36,3 +38,18 @@
         }
     </tbody>
 </table>
+
+<footer class="container mt-4">
+    <div class="d-flex justify-content-center">
+        @if (Model.TotalPages >= 1)
+        {
+        <div class="paginacao">
+            Páginas : 
+            @for (var i = 1; i <= Model.TotalPages; i++)
+            {
+              <a asp-action="Index" asp-route-pagina="@i">@i</a>
+            }
+        </div>
+        }
+    </div>
+</footer>

@@ -28,9 +28,16 @@ namespace Blog.Data.Mapping
                 .HasDefaultValue(string.Empty);
 
             builder.Property(p => p.AuthorId)
-                .IsRequired(true)
-                .HasAnnotation("ErrorMessage", "O campo AuthorId é obrigatório.")
+                .IsRequired(true)               
                 .HasColumnType("INT");
+
+            builder.HasOne(p => p.Author)
+                .WithMany(a => a.Posts)
+                .HasForeignKey(p => p.AuthorId);
+
+            builder.HasIndex(p => p.AuthorId).HasDatabaseName("IX_Posts_AuthorId");
+
+
         }
     }
 }

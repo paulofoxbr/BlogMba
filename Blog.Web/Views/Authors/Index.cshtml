@@ -1,29 +1,20 @@
 ﻿@model IEnumerable<Blog.Data.Models.Author>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Autores";
 }
 
-<h1>Index</h1>
+<h1>Lista de autores</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Novo</a>
 </p>
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Bio)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UserId)
-            </th>
+            <th>@Html.DisplayNameFor(model=> model.Id)</th>
+            <th>@Html.DisplayNameFor(model => model.Name)</th>
+            <th>@Html.DisplayNameFor(model => model.Email)</th>
             <th></th>
         </tr>
     </thead>
@@ -31,16 +22,12 @@
 @foreach (var item in Model) {
         <tr>
             <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            <td>
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Bio)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserId)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

@@ -18,7 +18,7 @@ namespace Blog.Data.Migrations
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(1000)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -35,10 +35,10 @@ namespace Blog.Data.Migrations
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PasswordHash = table.Column<string>(type: "nvarchar(1000)", nullable: true),
+                    SecurityStamp = table.Column<string>(type: "nvarchar(1000)", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(1000)", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(1000)", nullable: true),
                     PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
                     TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
                     LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
@@ -56,10 +56,10 @@ namespace Blog.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Bio = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(1000)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(1000)", nullable: false),
+                    Bio = table.Column<string>(type: "nvarchar(1000)", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(1000)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -72,7 +72,7 @@ namespace Blog.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    PostComment = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PostComment = table.Column<string>(type: "nvarchar(1000)", nullable: false),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: false),
                     PostId = table.Column<int>(type: "int", nullable: false),
                     AuthorId = table.Column<int>(type: "int", nullable: false)
@@ -88,8 +88,8 @@ namespace Blog.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(1000)", nullable: false),
+                    Content = table.Column<string>(type: "nvarchar(1000)", nullable: false),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Updated = table.Column<DateTime>(type: "datetime2", nullable: true),
                     AuthorId = table.Column<int>(type: "int", nullable: false)
@@ -106,8 +106,8 @@ namespace Blog.Data.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    ClaimType = table.Column<string>(type: "nvarchar(1000)", nullable: true),
+                    ClaimValue = table.Column<string>(type: "nvarchar(1000)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -127,8 +127,8 @@ namespace Blog.Data.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    ClaimType = table.Column<string>(type: "nvarchar(1000)", nullable: true),
+                    ClaimValue = table.Column<string>(type: "nvarchar(1000)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -147,7 +147,7 @@ namespace Blog.Data.Migrations
                 {
                     LoginProvider = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
                     ProviderKey = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
-                    ProviderDisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ProviderDisplayName = table.Column<string>(type: "nvarchar(1000)", nullable: true),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
@@ -192,7 +192,7 @@ namespace Blog.Data.Migrations
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     LoginProvider = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
                     Name = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
-                    Value = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Value = table.Column<string>(type: "nvarchar(1000)", nullable: true)
                 },
                 constraints: table =>
                 {

@@ -7,22 +7,31 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Blog.Data.Data;
 using Blog.Data.Models;
+using Microsoft.AspNetCore.Authorization;
+using Blog.Data.Services;
+using Microsoft.AspNetCore.Identity;
+
 
 namespace Blog.Web.Controllers
 {
+    [Authorize]
     public class AuthorsController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly AuthorService _authorService;
+        private readonly SignInManager<IdentityUser>  _signInManager;
+        private readonly UserManager<IdentityUser>   _userManager;
 
-        public AuthorsController(AppDbContext context)
+        public AuthorsController(AuthorService authorService,SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager)
         {
-            _context = context;
+            _authorService = authorService;
+            _signInManager = signInManager;
+            _userManager = userManager;
         }
 
         // GET: Authors
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Authors.ToListAsync());
+            return View(await _authorService.GetAuthorsAsync());
         }
 
         // GET: Authors/Details/5
@@ -33,8 +42,7 @@ namespace Blog.Web.Controllers
                 return NotFound();
             }
 
-            var author = await _context.Authors
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var author = await _authorService.GetAuthorByIdAsync(id.Value);
             if (author == null)
             {
                 return NotFound();
@@ -58,8 +66,21 @@ namespace Blog.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(author);
-                await _context.SaveChangesAsync();
+                var userByEmail = await _userManager.FindByEmailAsync(author.Email);
+                if (userByEmail == null)
+                {
+                   ModelState.AddModelError("Email", "e-mail Usuário não encontrado. Um autor deve ser um usuário cadastrado.");
+                    return View(author);
+                }
+                var authorByEmail = await _authorService.GetAuthorByUserEmail(author.Email);
+                if (authorByEmail != null)
+                {
+                    ModelState.AddModelError("Email", $"O e-mail Usuário já está associado ao autor #{authorByEmail.Id}-{ authorByEmail.Name}.");
+                    return View(author);
+                }
+
+                author.UserId = userByEmail.Id;
+                await _authorService.CreateAuthorAsync(author);
                 return RedirectToAction(nameof(Index));
             }
             return View(author);
@@ -73,7 +94,7 @@ namespace Blog.Web.Controllers
                 return NotFound();
             }
 
-            var author = await _context.Authors.FindAsync(id);
+            var author = await _authorService.GetAuthorByIdAsync(id.Value);
             if (author == null)
             {
                 return NotFound();
@@ -97,12 +118,11 @@ namespace Blog.Web.Controllers
             {
                 try
                 {
-                    _context.Update(author);
-                    await _context.SaveChangesAsync();
+                    await _authorService.UpdateAuthorAsync(author);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!AuthorExists(author.Id))
+                    if (! _authorService.AuthorExistsAsync(author.Id).Result)
                     {
                         return NotFound();
                     }
@@ -117,15 +137,14 @@ namespace Blog.Web.Controllers
         }
 
         // GET: Authors/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var author = await _context.Authors
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var author = await _authorService.GetAuthorByIdAsync(id);
             if (author == null)
             {
                 return NotFound();
@@ -139,19 +158,9 @@ namespace Blog.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var author = await _context.Authors.FindAsync(id);
-            if (author != null)
-            {
-                _context.Authors.Remove(author);
-            }
-
-            await _context.SaveChangesAsync();
+            await _authorService.DeleteAuthorAsync(id); 
             return RedirectToAction(nameof(Index));
         }
 
-        private bool AuthorExists(int id)
-        {
-            return _context.Authors.Any(e => e.Id == id);
-        }
     }
 }

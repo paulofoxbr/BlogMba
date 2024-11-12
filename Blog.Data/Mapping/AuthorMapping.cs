@@ -32,11 +32,13 @@ namespace Blog.Data.Mapping
                 .HasDefaultValue(string.Empty);
 
             builder.Property(a => a.UserId)
-                //.IsRequired(true)
                 .HasColumnType("NVARCHAR")
                 .HasMaxLength(450)
-                //.HasAnnotation("ErrorMessage", "O campo UserId é obrigatório.")
                 .HasDefaultValue(string.Empty);
+
+            builder.HasMany(a => a.Posts)
+               .WithOne(p => p.Author)
+               .HasForeignKey(p => p.AuthorId);
         }
     }
 }

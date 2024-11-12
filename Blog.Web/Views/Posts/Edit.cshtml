@@ -1,0 +1,106 @@
+﻿@model PostAuthorDto
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<h1 style="text-align:center">@ViewData["Title"]</h1>
+
+<div class="row" style="margin-bottom:20px">
+    <div class="col-md-12">
+        <!-- Primeiro, incluímos o TinyMCE via CDN -->
+        <!-- Adicione antes da inicialização do TinyMCE -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.8.3/tinymce.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.8.3/langs/pt_BR.min.js"></script>
+        <form asp-action="Edit">
+            <div style="display: flex; gap: 10px">
+                <div>
+                    <label asp-for="Created">Data da Publicação</label>
+                    <input asp-for="Created" class="form-control" disabled style="text-align:center; background-color:aquamarine;" />
+                </div>
+                <div>
+                    <label asp-for="Updated">Data da ultima atualização</label>
+                    <input asp-for="Updated" class="form-control" disabled style="text-align:center; background-color:aquamarine;" />
+                </div>
+                <div>
+                    <label asp-for="AuthorName">Autor</label>
+                    <input asp-for="AuthorName" class="form-control" disabled style="text-align:center; background-color:aquamarine;" />
+                </div>
+            </div>
+            <div class="form-group" style="margin-bottom:20px">
+                <label asp-for="Title">Título do Post</label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group" style="margin-bottom:20px">
+                <label asp-for="Content">Conteúdo do Post</label>
+                <textarea asp-for="Content" id="editor" class="form-control" spellcheck="true"></textarea>
+            </div>
+            <input type="submit" name="Edit" value="Enviar" class="btn btn-info" />
+            <a asp-action="Index" class="btn btn-warning">Voltar</a>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        tinymce.init({
+            selector: '#editor',
+            height: 500,
+            menubar: true,
+            toolbar: true,
+            readonly: false,
+            language: 'pt_BR', // Define o idioma como português do Brasil
+            browser_spellcheck: true, // Habilita o spellcheck nativo do navegador
+            contextmenu: 'spelling',
+            plugins: [
+                'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+                'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+                'insertdatetime', 'media', 'table', 'help', 'wordcount'
+            ],
+            // toolbar: 'desfazer refazer | formatselect | ' +
+            //     'negrito itálico sublinhado | alinharesquerda alinharcentro ' +
+            //     'alinhardireira justificar | numeração marcadores recuo-diminuir recuo-aumentar | ' +
+            //     'limpar-formatacao | ajuda',
+            toolbar: 'undo redo | formatselect | ' +
+                'bold italic backcolor | alignleft aligncenter ' +
+                'alignright alignjustify | bullist numlist outdent indent | ' +
+                'removeformat | help',
+            content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
+            // Configurações de idioma
+            language: 'pt_BR', // Define o idioma como português do Brasil
+            // Configurações adicionais para o spellchecker
+            gecko_spellcheck: true, // Para Firefox
+            spellchecker_language: 'pt_BR', // Idioma para verificação ortográfica
+            spellchecker_dialog: true, // Habilita diálogo de correção
+            // Configuração para adicionar palavras ao dicionário
+            custom_words: ['palavra1', 'palavra2'], // Palavras personalizadas para ignorar,
+            translations: {
+                'pt_BR': {
+                    'Bold': 'Negrito',
+                    'Italic': 'Itálico',
+                    'Underline': 'Sublinhado',
+                    'Strikethrough': 'Tachado',
+                    'Align left': 'Alinhar à esquerda',
+                    'Align center': 'Centralizar',
+                    'Align right': 'Alinhar à direita',
+                    'Justify': 'Justificar',
+                    'Bullet list': 'Lista com marcadores',
+                    'Numbered list': 'Lista numerada',
+                    'Decrease indent': 'Diminuir recuo',
+                    'Increase indent': 'Aumentar recuo',
+                    'Clear formatting': 'Limpar formatação',
+                    'Insert/edit link': 'Inserir/editar link',
+                    'Insert/edit image': 'Inserir/editar imagem',
+                    'Table': 'Tabela',
+                    'Help': 'Ajuda'
+                }
+            }
+        });
+    </script>
+}
