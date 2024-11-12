@@ -1,5 +1,6 @@
 ﻿using Blog.Data.Data;
 using Blog.Data.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,10 +28,11 @@ namespace Blog.Data.Services
             return await Task.FromResult(_context.Authors.FirstOrDefault(a => a.Id == id));
         }
 
-        public async Task CreateAuthorAsync(Author author)
+        public async Task<Author> CreateAuthorAsync(Author author)
         {
             _context.Authors.Add(author);
             await _context.SaveChangesAsync();
+            return author;
         }
 
         public async Task UpdateAuthorAsync(Author author)
@@ -62,9 +64,8 @@ namespace Blog.Data.Services
 
         public async Task<Author> GetAuthorByUserEmail(string email)
         {
-            var author = _context.Authors.FirstOrDefault(a => a.Email == email);
-
-            return author;
+            var author = await _context.Authors.Where(a => a.Email == email).FirstOrDefaultAsync();
+            return author ?? new Author();
         }
     }
 }

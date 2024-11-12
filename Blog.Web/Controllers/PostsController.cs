@@ -36,6 +36,12 @@ namespace Blog.Web.Controllers
             return View(result);
         }
 
+        [AllowAnonymous]
+        public async Task<ActionResult> AccessDenied()
+        {
+            return View();
+        }
+
         //// GET: Posts/detalhes/5
         [AllowAnonymous]
         [HttpGet("Details/{id:int}")]
@@ -96,8 +102,7 @@ namespace Blog.Web.Controllers
                 return View(postAuthor);
             else
             {
-                return RedirectToAction(nameof(Index));
-              //  return RedirectToAction("AccessDenied", "Account");
+                return RedirectToAction(nameof( AccessDenied));
             }
             
         }
