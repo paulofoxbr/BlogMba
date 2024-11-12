@@ -95,14 +95,13 @@ namespace Blog.Web.Controllers
             if (User.Identity.IsAuthenticated == false) { return RedirectToAction("Login", "Account"); }
             var userid = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var isAdmin= User.IsInRole("ADMIN");
-            var isAdmin2= await _userManager.IsInRoleAsync(await _userManager.FindByIdAsync(userid), "ADMIN");
 
             var postAuthor = await _postService.GetPostAuthorByIdAsync(id);
             if (isAdmin || userid==postAuthor.UserId) 
                 return View(postAuthor);
             else
             {
-                return RedirectToAction(nameof( AccessDenied));
+                return RedirectToAction(nameof(AccessDenied));
             }
             
         }
@@ -129,9 +128,20 @@ namespace Blog.Web.Controllers
 
         // GET: PostController1/Delete/5
         [HttpGet("Delete/{id:int}")]
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            return View();
+            if (User.Identity.IsAuthenticated == false) { return RedirectToAction("Login", "Account"); }
+            var userid = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var isAdmin = User.IsInRole("ADMIN");
+            //var isAdmin2 = await _userManager.IsInRoleAsync(await _userManager.FindByIdAsync(userid), "ADMIN");
+
+            var postAuthor = await _postService.GetPostAuthorByIdAsync(id);
+            if (isAdmin || userid == postAuthor.UserId)
+                return View(postAuthor);
+            else
+            {
+                return RedirectToAction(nameof(AccessDenied));
+            }
         }
 
         // POST: PostController1/Delete/5
