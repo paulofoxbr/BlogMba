@@ -115,6 +115,10 @@ public static class DbMigrationHelpers
         {
             await roleManager.CreateAsync(new IdentityRole("Admin"));
         }
+        if (!await roleManager.RoleExistsAsync("Author"))
+        {
+            await roleManager.CreateAsync(new IdentityRole("Author"));
+        }
     }
     private static async Task EnsureSeedUsers(AppDbContext context, UserManager<IdentityUser> userManager)
     {
@@ -132,8 +136,6 @@ public static class DbMigrationHelpers
                 TwoFactorEnabled = false
             };
             await userManager.CreateAsync(adminUser, "Admin@123");
-
-            // Adicione o usuário ao papel "Admin"
             await userManager.AddToRoleAsync(adminUser, "Admin");
         }
         if (await userManager.FindByEmailAsync("autor1@exemplo.com") == null)
@@ -149,6 +151,10 @@ public static class DbMigrationHelpers
                 TwoFactorEnabled = false
             };
             var retUsuario = await userManager.CreateAsync(userPost, "User1@123");
+            if (retUsuario.Succeeded)
+            {
+                await userManager.AddToRoleAsync(userPost, "Author");
+            }
         }
     }
 }
