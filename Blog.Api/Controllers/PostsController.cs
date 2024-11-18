@@ -1,43 +1,36 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Blog.Data.Dto;
+using Blog.Data.Services;
+using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Blog.Api.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class PostsController : ControllerBase
     {
-        // GET: api/<PostsController>
-        [HttpGet]
-        public IEnumerable<string> Get()
+        private readonly PostService _postService;
+
+        public PostsController(PostService postService)
         {
-            return new string[] { "value1", "value2" };
+            _postService = postService;
+        }
+        [HttpGet("post-autor/{pageNumber:int}/{pageSize:int}")]
+        //[HttpGet("post-autor")]
+
+        public async Task<ActionResult<ResponsePostAutor>> GetPostAuthor(int pageNumber,int pageSize)
+        {
+            var posts = await _postService.GetPostAuthorAsync(pageNumber,pageSize);
+            return posts;
         }
 
         // GET api/<PostsController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public string GetPost(int id)
         {
             return "value";
         }
 
-        // POST api/<PostsController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT api/<PostsController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<PostsController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
     }
 }
