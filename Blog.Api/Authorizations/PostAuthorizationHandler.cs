@@ -28,6 +28,7 @@ public class PostAuthorizationHandler : AuthorizationHandler<PostAuthorizationRe
         }
 
         var routeData = _httpContextAccessor.HttpContext.GetRouteData();
+        
         if (routeData.Values["id"] is string idString && int.TryParse(idString, out int postId))
         {
             var postAuthor = await _postService.GetPostAuthorByIdAsync(postId);

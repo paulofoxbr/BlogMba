@@ -1,8 +1,10 @@
+using Blog.Api.Authorizations;
 using Blog.Api.Configurations;
 using Blog.Api.Models;
 using Blog.Data.Data;
 using Blog.Data.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -71,8 +73,19 @@ builder.Services.AddAuthentication(options =>
         ValidIssuer = jwtSettings.Issuer,
     };
 });
-builder.Services.AddAuthorization();
+
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<IAuthorizationHandler, PostAuthorizationHandler>();
+builder.Services.AddAuthorization(options =>
+{
+options.AddPolicy("PostAuthorOrAdminPolicy", policy =>
+
+    policy.Requirements.Add(new PostAuthorizationRequirement()));
+});
+
+
 builder.Services.AddScoped<PostService>();
+builder.Services.AddScoped<AuthorService>();
 
 var app = builder.Build();
 
