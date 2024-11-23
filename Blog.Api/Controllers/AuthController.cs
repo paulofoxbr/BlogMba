@@ -77,6 +77,8 @@ namespace Blog.Api.Controllers
                 new Claim(ClaimTypes.Name, user.UserName)
             };
 
+            claims.Add(new Claim(ClaimTypes.Email, user.Email));
+
             foreach (var role in roles)
             {
                 claims.Add(new Claim(ClaimTypes.Role, role));

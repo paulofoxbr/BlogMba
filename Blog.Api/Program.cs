@@ -76,11 +76,8 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IAuthorizationHandler, PostAuthorizationHandler>();
-builder.Services.AddAuthorization(options =>
-{
-options.AddPolicy("PostAuthorOrAdminPolicy", policy =>
-
-    policy.Requirements.Add(new PostAuthorizationRequirement()));
+builder.Services.AddAuthorization(options => {
+    options.AddPolicy("PostAuthorOrAdminPolicy", policy => policy.Requirements.Add(new PostAuthorizationRequirement())); 
 });
 
 

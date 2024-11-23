@@ -19,9 +19,8 @@ namespace Blog.Data.Models
         public string Content { get; set; } = string.Empty;
         public DateTime Created { get; set; } = DateTime.Now;
         public DateTime? Updated { get; set; }
-        // [Required(ErrorMessage = "O campo AuthorId é obrigatório.")]
         public int AuthorId { get; set; } = 0;
-        public Author Author { get; set; }  
+        public Author? Author { get; set; }  
 
     }
 }

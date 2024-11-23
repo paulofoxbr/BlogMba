@@ -28,12 +28,21 @@ public class PostAuthorizationHandler : AuthorizationHandler<PostAuthorizationRe
         }
 
         var routeData = _httpContextAccessor.HttpContext.GetRouteData();
-        
-        if (routeData.Values["id"] is string idString && int.TryParse(idString, out int postId))
+
+        var isCreateAction = routeData.Values["Action"].ToString().Contains("Create");
+        var idValue = routeData.Values["id"];
+
+        if (isCreateAction && user.Identity.IsAuthenticated)
+        {
+            context.Succeed(requirement);
+            return;
+        }
+
+        if  (routeData.Values["id"] is string idString && int.TryParse(idString, out int postId)) 
         {
             var postAuthor = await _postService.GetPostAuthorByIdAsync(postId);
             var post = await _postService.GetPostByIdAsync(postId);
-            if (post != null && postAuthor.AuthorEmail == user.FindFirstValue(ClaimTypes.NameIdentifier))
+            if (post != null && postAuthor.AuthorEmail == user.FindFirstValue(ClaimTypes.Email))
             {
                 context.Succeed(requirement);
                 return;

@@ -59,6 +59,9 @@ namespace Blog.Api.Controllers
         {
             if (post == null)  { return BadRequest(); }
 
+            //todo: verificar se o usuário é um autor
+            var userId = _userManager.GetUserId(User); // User não tem o ClaimsPrincipal
+
             var author = await _authorService.GetAuthorByUserId(_userManager.GetUserId(User));
             if (author == null) { return Problem("Falha na identificação do usuário/autor."); }
 
