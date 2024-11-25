@@ -4,6 +4,7 @@ using Blog.Data.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -60,13 +61,18 @@ namespace Blog.Api.Controllers
             if (post == null)  { return BadRequest(); }
 
             //todo: verificar se o usuário é um autor
-            var userId = _userManager.GetUserId(User); // User não tem o ClaimsPrincipal
+            //            var userId = _userManager.GetUserId(User); // User não tem o ClaimsPrincipal
+            var userEmail = User.FindFirstValue(ClaimTypes.Email);
+            var user = await _userManager.FindByEmailAsync(userEmail);
+            var userId = user.Id;
 
-            var author = await _authorService.GetAuthorByUserId(_userManager.GetUserId(User));
+            var author = await _authorService.GetAuthorByUserId(userId);
             if (author == null) { return Problem("Falha na identificação do usuário/autor."); }
 
             post.AuthorId = author.Id;
             post.Author = author;
+            post.Created = DateTime.Now;
+
             await _postService.CreatePostAsync(post);
             return Ok();
         }
