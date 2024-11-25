@@ -12,10 +12,12 @@ namespace Blog.Data.Services
     public class AuthorService
     {
         private readonly AppDbContext _context;
+        private readonly SqLiteService _sqLiteService;
 
         public AuthorService(AppDbContext appContext)
         {
             _context = appContext;
+            _sqLiteService = new SqLiteService(_context);
         }
 
         public async Task<IEnumerable<Author>> GetAuthorsAsync()
@@ -30,6 +32,8 @@ namespace Blog.Data.Services
 
         public async Task<Author> CreateAuthorAsync(Author author)
         {
+            if (_sqLiteService.IsSqLite) { author.Id = await _sqLiteService.GenerateIdAsync<Author>(); }
+
             _context.Authors.Add(author);
             await _context.SaveChangesAsync();
             return author;
