@@ -9,17 +9,20 @@ namespace Blog.Data.Services
     public class PostService
     {
         private readonly AppDbContext _context;
+        private readonly SqLiteService _sqLiteService;
 
         public PostService(AppDbContext context)
         {
             if (context is null)    { throw new ArgumentNullException(nameof(context));}
 
             _context = context;
+            _sqLiteService = new SqLiteService(context);
         }
 
         public async Task CreatePostAsync(Post post)
         {
             if ( post == null) {throw new ArgumentNullException(nameof(post.AuthorId));}
+            if (_sqLiteService.IsSqLite)  {  post.Id = await _sqLiteService.GenerateIdAsync<Post>(); }
 
             _context.Add(post);
             await _context.SaveChangesAsync();
